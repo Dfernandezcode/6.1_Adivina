@@ -1,14 +1,30 @@
-let inputEl = document.querySelector('.name__input')[0];
-let buttonEl = document.querySelector('.name__button')[0];
-let resultEl = document.querySelector('.result-number')[0];
+let elementInput = document.getElementById('name__input');
 
-console.log(inputEl);
-console.log(buttonEl);
-console.log(resultEl.textContent);
+function printResult(age) {
+	let resultEl = document.getElementById('result__age');
+	resultEl.textContent = age;
+}
 
-const URL = "https://api.agify.io?name=";
+const URL = 'https://api.agify.io?name=';
 
-let guessAge = (userName) =>
-let urlConcat = URL + userName.value;
-fetch (urlConcat)
+function guessAge(name) {
+	let urlFinal = URL + name;
 
+	fetch(urlFinal)
+		.then((resp) => resp.json())
+		.then((resp) => {
+			if (resp.age === null) {
+				let resultAge = document.getElementById('result__age');
+				resultAge.textContent = '-';
+				throw new Error("Couldn't find age");
+			} else {
+				printResult(resp.age);
+			}
+		})
+		.catch((error) => console.log(error));
+}
+
+let nameButton = document.getElementById('name__button');
+nameButton.addEventListener('click', function () {
+	guessAge(elementInput.value);
+});
